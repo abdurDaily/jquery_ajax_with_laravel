@@ -16,6 +16,7 @@ class AjaxControler extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all()); // Debugging: Check the incoming request data
         $data = $request->validate([
             'name'     => 'required',
             'email'    => 'required|email|unique:users,email',
@@ -39,6 +40,7 @@ class AjaxControler extends Controller
     {
         $user = User::findOrFail($id);
 
+        // dd($request->all()); // Debugging: Check the incoming request data
         $data = $request->validate([
             'name'     => 'required',
             'email'    => 'required|email',
@@ -71,6 +73,7 @@ class AjaxControler extends Controller
         $user = User::findOrFail($id);
         $user->delete();
 
+        // dd($user); // Debugging: Check the user object before deletion
         return response()->json([
             'status' => 'success',
             'message' => 'User deleted successfully',

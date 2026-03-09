@@ -77,7 +77,6 @@
         $(document).ready(function() {
 
             let form = $('form');
-
             // ── STORE / UPDATE ──────────────────────────────────
             form.on('submit', function(e) {
                 e.preventDefault();
@@ -85,7 +84,6 @@
                 let email = $('#email').val();
                 let password = $('#password').val();
                 let userId = $('#user_id').val();
-
                 $.ajax({
                     url: form.attr('action'),
                     method: 'POST',
@@ -95,11 +93,10 @@
                         password: password,
                         user_id: userId,
                         _token: "{{ csrf_token() }}",
-                        _method: userId ? 'PUT' : undefined  // method spoofing for update
+                        _method: userId ? 'PUT' : null // method spoofing for update
                     },
                     success: function(response) {
                         let user = response.data;
-
                         if (userId) {
                             // Update existing row in place
                             let row = $('tr[data-id="' + user.id + '"]');
@@ -109,18 +106,17 @@
                             // Prepend new row
                             $('#nodata').remove();
                             let newRow = `
-                                <tr data-id="${user.id}">
-                                    <td class="name">${user.name}</td>
-                                    <td class="email">${user.email}</td>
-                                    <td>
-                                        <button class="btn btn-sm btn-warning editBtn" data-id="${user.id}">Edit</button>
-                                        <button class="btn btn-sm btn-danger deleteBtn" data-id="${user.id}">Delete</button>
-                                    </td>
-                                </tr>
-                            `;
+                <tr data-id="${user.id}">
+                    <td class="name">${user.name}</td>
+                    <td class="email">${user.email}</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning editBtn" data-id="${user.id}">Edit</button>
+                        <button class="btn btn-sm btn-danger deleteBtn" data-id="${user.id}">Delete</button>
+                    </td>
+                </tr>
+                `;
                             $('#tbody').prepend(newRow);
                         }
-
                         const Toast = Swal.mixin({
                             toast: true,
                             position: "top-end",
@@ -128,8 +124,10 @@
                             timer: 3000,
                             timerProgressBar: true,
                             didOpen: (toast) => {
-                                toast.addEventListener("mouseenter", Swal.stopTimer);
-                                toast.addEventListener("mouseleave", Swal.resumeTimer);
+                                toast.addEventListener("mouseenter", Swal
+                                    .stopTimer);
+                                toast.addEventListener("mouseleave", Swal
+                                    .resumeTimer);
                             }
                         });
 
@@ -197,14 +195,15 @@
                             _method: 'DELETE'
                         },
                         success: function(response) {
+                            // $('tr[data-id="' + userId + '"]').remove() ;
                             $('tr[data-id="' + userId + '"]').fadeOut(300, function() {
                                 $(this).remove();
                                 if ($('#tbody tr').length === 0) {
                                     $('#tbody').append(`
-                                        <tr id="nodata">
-                                            <td colspan="3" class="text-center">No users found.</td>
-                                        </tr>
-                                    `);
+                                <tr id="nodata">
+                                    <td colspan="3" class="text-center">No users found.</td>
+                                </tr>
+                            `);
                                 }
                             });
 
@@ -215,8 +214,10 @@
                                 timer: 3000,
                                 timerProgressBar: true,
                                 didOpen: (toast) => {
-                                    toast.addEventListener("mouseenter", Swal.stopTimer);
-                                    toast.addEventListener("mouseleave", Swal.resumeTimer);
+                                    toast.addEventListener("mouseenter",
+                                        Swal.stopTimer);
+                                    toast.addEventListener("mouseleave",
+                                        Swal.resumeTimer);
                                 }
                             });
 
